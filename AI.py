@@ -15,7 +15,9 @@ for step in range(5):
     chat_history_ids = model.generate(
         bot_input_ids,
         max_length=1000,
-        pad_token_id=tokenizer.eos_token_id,
+        do_sample=True,
+        top_k=0,
+        pad_token_id=tokenizer.eos_token_id
     )
 
     output = tokenizer.decode(chat_history_ids[:, bot_input_ids.shape[-1]:][0], skip_special_tokens=True)
