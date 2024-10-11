@@ -15,7 +15,7 @@ def chatAI(user_input, history = None):
 
 	bot_response = tokenizer.decode(history[:, bot_input_ids.shape[-1]:][0], skip_special_tokens=True)
 
-	return bot_response, chat_history_ids
+	return bot_response, ids
 
 
 def main():
