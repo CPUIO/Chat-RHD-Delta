@@ -5,20 +5,26 @@ model_name = "microsoft/DialoGPT-small"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
-for step in range(5):
-    text = input(">> You:")
+def chatAI(user_input, history = None):
 
-    input_ids = tokenizer.encode(text + tokenizer.eos_token, return_tensors="pt")
+	ids = tokenizer.encode(user_input + tokenizer.eos_token, return_tensors='pt')
+	
+	bot_input_ids = torch.cat([history, new_user_input_ids], dim=-1) if history is not None else new_user_input_ids
 
-    bot_input_ids = torch.cat([chat_history_ids, input_ids], dim=-1) if step > 0 else input_ids
+	history = model.generate(bot_input_ids, max_length=1000, pad_token_id=tokenizer.eos_token_id)
 
-    chat_history_ids = model.generate(
-        bot_input_ids,
-        max_length=1000,
-        do_sample=True,
-        top_k=0,
-        pad_token_id=tokenizer.eos_token_id
-    )
+	bot_response = tokenizer.decode(history[:, bot_input_ids.shape[-1]:][0], skip_special_tokens=True)
 
-    output = tokenizer.decode(chat_history_ids[:, bot_input_ids.shape[-1]:][0], skip_special_tokens=True)
-    print(f"DialoGPT: {output}")
+	return bot_response, chat_history_ids
+
+
+def main():
+	history = None
+	while True:
+		text = input(">> ")
+		bot_response, history = chat_with_bot(user_input, history)
+		print("<< ", bot_response)
+
+
+if __name__=="__main__":
+	main()
