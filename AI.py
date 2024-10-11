@@ -22,7 +22,7 @@ def main():
 	history = None
 	while True:
 		text = input(">> ")
-		bot_response, history = chat_with_bot(user_input, history)
+		bot_response, history = chatAI(text, history)
 		print("<< ", bot_response)
 
 
