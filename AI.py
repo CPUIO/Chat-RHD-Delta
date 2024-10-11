@@ -9,7 +9,7 @@ def chatAI(user_input, history = None):
 
 	ids = tokenizer.encode(user_input + tokenizer.eos_token, return_tensors='pt')
 	
-	bot_input_ids = torch.cat([history, ids], dim=-1) if history is not None else new_user_input_ids
+	bot_input_ids = torch.cat([history, ids], dim=-1) if history is not None else ids
 
 	history = model.generate(bot_input_ids, max_length=1000, pad_token_id=tokenizer.eos_token_id)
 
