@@ -2,6 +2,7 @@ from navec import Navec
 # from sklearn.metrics.pairwise import cosine_similarity
 import pymupdf  # PyMuPDF
 import numpy as np
+from annoy import AnnoyIndex
 
 path = 'navec_hudlit_v1_12B_500K_300d_100q.tar'
 navec = Navec.load(path)
@@ -16,10 +17,19 @@ words_embeddings = [navec[word] for word in query_words if word in navec]
 if words_embeddings:
   # Усредняем эмбеддинги слов для предложения
   sentence_embedding = np.mean(words_embeddings, axis=0)
+  # Добавление эмбеддингов в индекс
+  for i, embedding in enumerate(sentence_embedding):
+    index.add_item(i, embedding)
 else:
   sentence_embedding = np.zeros(300)  # Если ни одного слова нет в словаре
 
 print(sentence_embedding)
+
+# Построение дерева для поиска
+index.build(10)  # 10 деревьев
+
+# Сохранение индекса на диск (опционально)
+index.save('sentence_embeddings.ann')
 
 #
 # doc = pymupdf.open("a.pdf")  # open a document

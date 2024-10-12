@@ -1,0 +1,4 @@
+annoy==1.17.3
+navec==0.10.0
+numpy==2.1.2
+PyMuPDF==1.24.11
