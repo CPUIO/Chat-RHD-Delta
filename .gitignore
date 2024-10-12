@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+.vscode/
+.idea/
+navec_hudlit_v1_12B_500K_300d_100q.tar
