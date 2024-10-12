@@ -1,3 +1,7 @@
+annoy==1.17.3
+navec==0.10.0
+numpy==2.1.2
+PyMuPDF==1.24.11
 annotated-types==0.7.0
 anyio==4.6.0
 certifi==2024.8.30
@@ -15,6 +19,7 @@ Jinja2==3.1.4
 markdown-it-py==3.0.0
 MarkupSafe==3.0.1
 mdurl==0.1.2
+psycopg2-binary==2.9.9
 pydantic==2.9.2
 pydantic_core==2.23.4
 Pygments==2.18.0

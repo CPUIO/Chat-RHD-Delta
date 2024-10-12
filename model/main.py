@@ -11,25 +11,55 @@ navec = Navec.load(path)
 embedding_dim = 300
 index = AnnoyIndex(embedding_dim, 'angular')  # Мера угла
 
-query_text = "Ваш текст"
-query_words = query_text.split()  # Разбиваем предложение на слова
-words_embeddings = [navec[word] for word in query_words if word in navec]
-if words_embeddings:
-  # Усредняем эмбеддинги слов для предложения
-  sentence_embedding = np.mean(words_embeddings, axis=0)
-  # Добавление эмбеддингов в индекс
-  for i, embedding in enumerate(sentence_embedding):
-    index.add_item(i, embedding)
-else:
-  sentence_embedding = np.zeros(300)  # Если ни одного слова нет в словаре
+paragraphs = [
+    '''
+    Коллективный договор ОАО «РЖД» на 2023 - 2025 годы - правовой акт,
+    регулирующий социально-трудовые отношения в открытом акционерном
+    обществе «Российские железные дороги» между сторонами социального
+    партнерства - Работниками и Работодателем в лице их представителей.
+    ''',
+    '''
+    Настоящий Договор является единым для ОАО «РЖД», включая
+    филиалы, структурные подразделения и представительства, за исключением
+    Петропавловского отделения Южно-Уральской железной дороги - филиала
+    ОАО «РЖД», расположенного на территории Республики Казахстан, в котором,
+    на основе настоящего Договора и с учетом особенностей законодательства
+    Республики Казахстан, заключается отдельный коллективный договор на 2023 -
+    2025 годы.
+    ''',
+    '''
+    Нормы раздела 9 настоящего Договора не применяются в отношении
+    указанного филиала. При этом, нормы, регулирующие вопросы социального
+    партнерства, включаются в коллективный договор данного филиала в редакции,
+    согласованной с Комиссией по подготовке коллективного договора ОАО
+    «РЖД» и контролю за его выполнением в установленном порядке; указанные
+    нормы не могут снижать уровень гарантий, установленных для
+    уполномоченного представителя работников указанного филиала, по
+    сравнению с уровнем гарантий, установленных для Профсоюза.
+    '''
+]
 
-print(sentence_embedding)
+# Функция для вычисления эмбеддинга предложения (абзаца)
+def get_sentence_embedding(text):
+  words = text.split()  # Разбиваем текст на слова
+  # Получаем эмбединги для слов
+  words_embeddings = [navec[word] for word in words if word in navec]
+  if words_embeddings:
+    # Усредняем эмбеддинги для получения эмбеддинга текста
+    return np.mean(words_embeddings, axis=0)
+  else:
+    # Возвращаем нулевой вектор, если нет известных слов
+    return np.zeros(embedding_dim)
+
+# query_text = "Ваш текст"
+
+# print(sentence_embedding)
 
 # Построение дерева для поиска
 index.build(10)  # 10 деревьев
 
 # Сохранение индекса на диск (опционально)
-index.save('sentence_embeddings.ann')
+# index.save('sentence_embeddings.ann')
 
 #
 # doc = pymupdf.open("a.pdf")  # open a document
@@ -41,3 +71,20 @@ index.save('sentence_embeddings.ann')
 # out.close()
 
 # similarity = cosine_similarity([query_embedding], document_embeddings)
+
+
+# def extract_paragraphs_from_pdf(pdf_path):
+#   doc = pymupdf.open(pdf_path)  # Открываем документ
+#   paragraphs = []
+
+#   for page in doc:  # Итерируем страницы
+#     text = page.get_text()  # Получаем текст
+#     # Разделяем текст на абзацы по переносу строки
+#     paragraphs.extend(text.split('\n'))
+
+#   return paragraphs
+
+
+# text = extract_paragraphs_from_pdf(
+#     '/home/denis/Документы/dev/ЦифровойПрорыв2024/dataset/Коллективный договор.pdf')
+# print(text)
