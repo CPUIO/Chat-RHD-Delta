@@ -1,4 +1,0 @@
-transformers
-torch
-PyMuPDF
-pypdf
