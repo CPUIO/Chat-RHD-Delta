@@ -11,11 +11,12 @@
     <form @submit.prevent="sendMessage">
       <input
         type="text"
+        class="input"
         v-model="message"
         @keyup.enter="sendMessage"
         placeholder="Введите сообщение"
       />
-      <button type="submit">Отправить</button>
+      <button type="submit" class="button">Отправить</button>
     </form>
   </div>
 </template>

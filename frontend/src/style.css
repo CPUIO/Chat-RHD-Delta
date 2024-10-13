@@ -65,6 +65,12 @@ button:focus-visible {
   margin: 0 auto;
 }
 
+.input {
+  width: 70%;
+  height: 20%;
+  font-size: 120%;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
