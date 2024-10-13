@@ -4,8 +4,17 @@ from model.main import get_text_embedding
 from fastapi import FastAPI
 import psycopg2
 from annoy import AnnoyIndex
+from pydantic import BaseModel
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,  # Класс мидлвари должен быть передан первым аргументом
+    allow_origins=["http://localhost:5173"],  # Разрешенные источники
+    allow_credentials=True,
+    allow_methods=["*"],  # Разрешенные методы
+    allow_headers=["*"],  # Разрешенные заголовки
+)
 
 # Подключение к базе данных PostgreSQL
 conn = psycopg2.connect(
@@ -32,18 +41,26 @@ except Exception as e:
   print(f"Не найден файл индексов Annoy: {e}")
 
 # Определение модели данных, которая описывает входные данные (JSON)
-class Message():
-    text: str  # Ожидаемое поле "text" в JSON
+class Message(BaseModel):
+  text: str  # Ожидаемое поле "text" в JSON
 
 @app.post("/question")
 async def question(message: Message):
-    # Логика обработки текста
-    received_text = message.question
-    response_text = f"Ваше сообщение: {received_text}"
+  # Векторизация вопроса пользователя
+  question_embedding = get_text_embedding(message.question)
 
-    # Возвращаем ответ в формате JSON
-    return {"response": response_text}
+  # Поиск ближайших 3 абзацев, их индексов
+  top_3_indices = index.get_nns_by_vector(question_embedding, 3)
 
+  # Запрашиваем соответствующие тексты из PostgreSQL
+  results = []
+  for idx in top_3_indices:
+    cur.execute("SELECT text FROM embeddings WHERE id = %s", (idx,))
+    text = cur.fetchone()[0]  # Получаем текст абзаца
+    results.append(text)
+  
+  # Возвращаем ответ в формате JSON
+  return {results}
 
 extracted_paragraphs = extractText("documents/Коллективный договор.pdf")
 #print(extracted_paragraphs[1])

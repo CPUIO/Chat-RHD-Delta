@@ -1,9 +1,14 @@
 <template>
   <div>
-    <!-- Отображение всех ответов от сервера -->
+    <!-- Отображение всех сообщений (как пользователя, так и сервера) -->
     <div class="response-block">
-      <div v-for="(res, index) in responses" :key="index" class="response">
-        Ответ от сервера: {{ res }}
+      <div
+        v-for="(message, index) in chatMessages"
+        :key="index"
+        :class="message.role"
+      >
+        <p>{{ message.role === "user" ? "Вы" : "Сервер" }}:</p>
+        {{ message.text }}
       </div>
     </div>
 
@@ -11,7 +16,7 @@
     <form @submit.prevent="sendMessage">
       <input
         type="text"
-        v-model="message"
+        v-model="question"
         @keyup.enter="sendMessage"
         placeholder="Введите сообщение"
       />
@@ -24,10 +29,11 @@
 import { ref } from "vue";
 
 const question = ref(""); // Поле для ввода сообщения
-const response = ref(""); // Поле для хранения ответа от сервера
+const chatMessages = ref([]); // Поле для хранения ответа от сервера
 
 const sendMessage = async () => {
   if (question.value.trim()) {
+    chatMessages.value.push({ role: "user", text: question.value });
     try {
       // Используем fetch для отправки POST запроса на сервер
       const res = await fetch("http://127.0.0.1:8000/question/", {
@@ -45,13 +51,14 @@ const sendMessage = async () => {
       // Парсим JSON ответ от сервера
       const data = await res.json();
 
-      // Добавляем новый ответ в список ответов
-      responses.value.push(data.response);
+      // Добавляем ответ сервера в список чата
+      chatMessages.value.push({ role: "bot", text: data.response });
+
+      question.value = "";
     } catch (error) {
       alert(
-        "Ошибка при отправке сообщения:",
-        error,
-        ". Произошла непредвиденная ошибка, попробуйте позже."
+        "Произошла непредвиденная ошибка при отправке сообщения, попробуйте позже.",
+        error
       );
     }
   } else {
