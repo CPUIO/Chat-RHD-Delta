@@ -62,9 +62,9 @@ const sendMessage = async () => {
 
 <style scoped>
 .response-block {
-  width: 300%;
-  height: 100%;
-  padding: 70%;
+  width: 70%;
+  height: 50%;
+  padding: 20%;
   background-color: #495A6E;
   border-radius: 10px;
 }
