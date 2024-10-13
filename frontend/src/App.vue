@@ -16,11 +16,11 @@
     <form @submit.prevent="sendMessage">
       <input
         type="text"
-        v-model="question"
+        v-model="message"
         @keyup.enter="sendMessage"
         placeholder="Введите сообщение"
       />
-      <button type="submit">Отправить</button>
+      <button type="submit" class="button">Отправить</button>
     </form>
   </div>
 </template>
@@ -69,9 +69,10 @@ const sendMessage = async () => {
 
 <style scoped>
 .response-block {
-  width: 100%;
-  height: 100%;
-  padding: 20vh;
-  background-color: bisque;
+  width: 70%;
+  height: 50%;
+  padding: 20%;
+  background-color: #495a6e;
+  border-radius: 10px;
 }
 </style>
