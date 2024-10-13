@@ -12,7 +12,7 @@ def extractText(file) -> list:
 	# Возвращаем список
 	return text_temp	
 
-if __name__=="__main__":
-	test = extractText("Коллективный договор.pdf")
-	for i in test:
-		print(i+"\n====\n\n")
+# if __name__=="__main__":
+# 	test = extractText("Коллективный договор.pdf")
+# 	for i in test:
+# 		print(i+"\n====\n\n")
