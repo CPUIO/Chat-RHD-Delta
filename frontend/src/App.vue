@@ -65,6 +65,7 @@ const sendMessage = async () => {
   width: 100%;
   height: 100%;
   padding: 20vh;
-  background-color: bisque;
+  background-color: #364658;
+  border-radius: 10px;
 }
 </style>
