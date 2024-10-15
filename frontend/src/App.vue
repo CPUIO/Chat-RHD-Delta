@@ -16,7 +16,7 @@
     <form @submit.prevent="sendMessage">
       <input
         type="text"
-        v-model="message"
+        v-model="question"
         @keyup.enter="sendMessage"
         placeholder="Введите сообщение"
       />
